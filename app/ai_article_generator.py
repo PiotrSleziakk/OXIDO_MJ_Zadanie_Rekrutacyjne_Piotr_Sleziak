@@ -26,7 +26,7 @@ def generate_template():
             flex-direction: column; /* Ustawiamy elementy w kolumnie */
         }
         .container {
-            width: 80%;
+            width: 60%;
             margin: 0 auto;
             background-color: #ffffff;
             padding: 20px;
@@ -95,7 +95,7 @@ def generate_preview(article_content):
             flex-direction: column; /* Ustawiamy elementy w kolumnie */
         }}
         .container {{
-            width: 80%;
+            width: 60%;
             margin: 0 auto;
             background-color: #ffffff;
             padding: 20px;
@@ -201,9 +201,14 @@ def process_article(file_path):
 def select_file():
     file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
     if file_path:
+        # Sprawdzenie, czy plik ma rozszerzenie .txt
+        if not file_path.endswith('.txt'):
+            status_label.config(text="Błąd: Wybrano plik w nieprawidłowym formacie. Wybierz plik .txt.", fg="red")
+            return
+
         # Zablokowanie przycisku i ustawienie informacji o trwającym przetwarzaniu
         select_button.config(state="disabled")
-        status_label.config(text="Przetwarzanie pliku... Proszę czekać...")
+        status_label.config(text="Przetwarzanie pliku... Proszę czekać...", fg="blue")
 
         # Uruchomienie procesu w osobnym wątku, aby nie blokować GUI
         import threading
