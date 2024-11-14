@@ -85,11 +85,14 @@ def generate_preview(article_content):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Podgląd Artykułu</title>
     <style>
-        body {{
-            font-family: Arial, sans-serif;
+        html, body {{
+            height: 100%;  /* Ustalamy pełną wysokość okna */
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column; /* Ustawiamy elementy w kolumnie */
         }}
         .container {{
             width: 80%;
@@ -97,6 +100,7 @@ def generate_preview(article_content):
             background-color: #ffffff;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            flex-grow: 1; /* Pozwala kontenerowi zająć całą dostępną przestrzeń */
         }}
         h1, h2, h3 {{
             color: #333;
@@ -120,9 +124,7 @@ def generate_preview(article_content):
             padding: 10px;
             background-color: #333;
             color: #fff;
-            position: sticky;
             width: 100%;
-            bottom: 0;
         }}
     </style>
 </head>
