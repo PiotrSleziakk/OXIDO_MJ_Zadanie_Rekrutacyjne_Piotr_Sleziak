@@ -6,6 +6,12 @@ import os
 # Tworzenie instancji klienta OpenAI
 client = openai.OpenAI(api_key="api.key")
 
+# Ścieżka do folderu wyjściowego
+OUTPUT_FOLDER = os.path.join(os.getcwd(), 'app_output')
+
+# Tworzenie folderu, jeśli nie istnieje
+if not os.path.exists(OUTPUT_FOLDER):
+    os.makedirs(OUTPUT_FOLDER)
 
 # Funkcja generująca szablon HTML i zapisująca go do pliku
 def generate_template():
@@ -71,7 +77,7 @@ def generate_template():
 """
 
     # Zapis do szablon.html
-    template_path = os.path.join(os.getcwd(), 'szablon.html')
+    template_path = os.path.join(OUTPUT_FOLDER, 'szablon.html')
     with open(template_path, 'w', encoding='utf-8') as file:
         file.write(template_html)
 
@@ -139,7 +145,7 @@ def generate_preview(article_content):
 </html>"""
 
     # Zapis do podglad.html
-    preview_path = os.path.join(os.getcwd(), 'podglad.html')
+    preview_path = os.path.join(OUTPUT_FOLDER, 'podglad.html')
     with open(preview_path, 'w', encoding='utf-8') as file:
         file.write(preview_html)
 
@@ -173,20 +179,13 @@ def process_article(file_path):
     # Pobranie wygenerowanego kodu HTML
     html_code = response_dict['choices'][0]['message']['content'].strip()
 
-    # Ścieżka do folderu 'processed articles'
-    folder_path = os.path.join(os.getcwd(), 'processed articles')
-
     # Ścieżka do pliku HTML
-    file_path = os.path.join(folder_path, 'artykul.html')
-
-    # Tworzenie folderu, jeśli nie istnieje
-    if not os.path.exists(folder_path):
-        os.makedirs(folder_path)
+    file_path = os.path.join(OUTPUT_FOLDER, 'artykul.html')
 
     # Zapis do artykul.html
     with open(file_path, "w", encoding='utf-8') as file:
         file.write(html_code)
-    print(f"Plik artykul.html został zapisany w folderze: {folder_path}")
+    print(f"Plik artykul.html został zapisany w folderze: {OUTPUT_FOLDER}")
 
     # Generowanie szablonu HTML
     generate_template()
@@ -195,7 +194,7 @@ def process_article(file_path):
     generate_preview(html_code)
 
     # Zwrócenie ścieżki folderu w celu przekazania do obsługi przetwarzania
-    return folder_path
+    return OUTPUT_FOLDER
 
 # Funkcja do wyboru pliku i obsługi przetwarzania
 def select_file():
@@ -210,7 +209,7 @@ def select_file():
         select_button.config(state="disabled")
         status_label.config(text="Przetwarzanie pliku... Proszę czekać...", fg="blue")
 
-        # Uruchomienie procesu w osobnym wątku, aby nie blokować GUI
+        # Uruchomienie procesu w osobnym wątku, aby nie blokować GUI, które poprawnie wyświetli status przetwarzania
         import threading
         processing_thread = threading.Thread(target=process_and_update, args=(file_path,))
         processing_thread.start()
@@ -223,7 +222,6 @@ def process_and_update(file_path):
     # Zaktualizowanie informacji po zakończeniu przetwarzania
     status_label.config(text=f"Przetwarzanie zakończone!\nPlik artykul.html został zapisany w folderze:\n{folder_path}")
     select_button.config(state="normal")
-
 
 # Funkcja do zamknięcia aplikacji
 def exit_application():
