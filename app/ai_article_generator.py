@@ -203,14 +203,22 @@ def select_file():
     if file_path:
         # Zablokowanie przycisku i ustawienie informacji o trwającym przetwarzaniu
         select_button.config(state="disabled")
-        status_label.config(text="Przetwarzanie pliku...")
+        status_label.config(text="Przetwarzanie pliku... Proszę czekać...")
 
-        # Przetwarzanie artykułu i pobranie ścieżki folderu
-        folder_path = process_article(file_path)
+        # Uruchomienie procesu w osobnym wątku, aby nie blokować GUI
+        import threading
+        processing_thread = threading.Thread(target=process_and_update, args=(file_path,))
+        processing_thread.start()
 
-        # Zaktualizowanie informacji i odblokowanie przycisku
-        status_label.config(text=f"Przetwarzanie zakończone! \nPlik artykul.html został zapisany w folderze: {folder_path}")
-        select_button.config(state="normal")
+# Funkcja przetwarzająca artykuł i aktualizująca GUI
+def process_and_update(file_path):
+    # Przetwarzanie artykułu
+    folder_path = process_article(file_path)
+
+    # Zaktualizowanie informacji po zakończeniu przetwarzania
+    status_label.config(text=f"Przetwarzanie zakończone!\nPlik artykul.html został zapisany w folderze:\n{folder_path}")
+    select_button.config(state="normal")
+
 
 # Funkcja do zamknięcia aplikacji
 def exit_application():
