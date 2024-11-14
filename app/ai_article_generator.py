@@ -84,65 +84,18 @@ def generate_template():
 
 # Funkcja do generowania pełnego podglądu artykułu
 def generate_preview(article_content):
-    preview_html = f"""<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Podgląd Artykułu</title>
-    <style>
-        html, body {{
-            height: 100%;  /* Ustalamy pełną wysokość okna */
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            flex-direction: column; /* Ustawiamy elementy w kolumnie */
-        }}
-        .container {{
-            width: 60%;
-            margin: 0 auto;
-            background-color: #ffffff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            flex-grow: 1; /* Pozwala kontenerowi zająć całą dostępną przestrzeń */
-        }}
-        h1, h2, h3 {{
-            color: #333;
-        }}
-        p {{
-            font-size: 1.1em;
-            line-height: 1.6;
-            color: #555;
-        }}
-        img {{
-            max-width: 100%;
-            height: auto;
-        }}
-        figcaption {{
-            text-align: center;
-            font-size: 0.9em;
-            color: #777;
-        }}
-        footer {{
-            text-align: center;
-            padding: 10px;
-            background-color: #333;
-            color: #fff;
-            width: 100%;
-        }}
-    </style>
-</head>
-<body>
-    <div class="container">
-        {article_content}
-    </div>
-    <footer>
-        <p>&copy; 2024 Generator Artykułów HTML</p>
-    </footer>
-</body>
-</html>"""
+    # Ścieżka do szablonu HTML
+    template_path = os.path.join(OUTPUT_FOLDER, 'szablon.html')
+
+    # Odczyt zawartości szablonu
+    with open(template_path, 'r', encoding='utf-8') as file:
+        template_html = file.read()
+
+    # Wstawienie treści artykułu do kontenera (np. <div class="container">)
+    preview_html = template_html.replace(
+        '<!-- Artykuł będzie wklejony tutaj -->',
+        article_content
+    )
 
     # Zapis do podglad.html
     preview_path = os.path.join(OUTPUT_FOLDER, 'podglad.html')
